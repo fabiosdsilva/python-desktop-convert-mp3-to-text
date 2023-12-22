@@ -1,0 +1,12 @@
+## System folder
+/build
+/dist
+**/*/__pycache__
+
+## System files
+/main.spec
+/Pipfile
+
+## Environment variables
+**/*.env
+**/.*.env
