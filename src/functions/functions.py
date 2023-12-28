@@ -4,6 +4,7 @@ from moviepy.editor import *
 from time import sleep
 import asyncio
 import shutil
+import os
 
 from src.functions import split, transcribe
 
@@ -13,26 +14,31 @@ class AudioConverter:
         try:
             select_file = filedialog.askopenfilename()
 
-            if select_file == '':
-                return None
+            if isinstance(select_file, (str)):
+                file_name = select_file.split('/')[-1]
 
-            file_name = select_file.split('/')[-1]
-            file_name_mp3 = file_name.replace('.mp4', '.mp3')
-            folder_name = select_file.replace(file_name, '')
+                _, file_extension = os.path.splitext(select_file)
+                print('Extensao do arquivo', file_extension)
 
-            self.MP4ToMP3(select_file)
+                if file_extension != '.mp3':
+                    return messagebox.showwarning('Atenção', 'O arquivo selecionado não é de áudio.\nApenas arquivos no formato mp3 ou mp4 são válidos.')
 
-            audio_split = split.SplitMp3AudioMubin
-            audio_split_formated = audio_split(folder_name, file_name_mp3).multiple_split(min_per_split=1, folder_name=folder_name)
-            #print('Audfio folo', audio_split_formated)
+                file_name_mp3 = file_name.replace('.mp4', '.mp3')
+                folder_name = select_file.replace(file_name, '')
 
-            asyncio.run(transcribe.Transcribe.transcribe(folder_name, audio_split_formated))
-            self.save_file(audio_split_formated.replace('.mp3', '.txt'), folder_name)
+                self.MP4ToMP3(select_file)
 
-            sleep(4)
-            shutil.rmtree(folder_name + 'output')
-            os.remove(folder_name + file_name_mp3)
-            return file_name
+                audio_split = split.SplitMp3AudioMubin
+                audio_split_formated = audio_split(folder_name, file_name_mp3).multiple_split(min_per_split=1, folder_name=folder_name)
+                #print('Audfio folo', audio_split_formated)
+
+                asyncio.run(transcribe.Transcribe.transcribe(folder_name, audio_split_formated))
+                self.save_file(audio_split_formated.replace('.mp3', '.txt'), folder_name)
+
+                sleep(4)
+                shutil.rmtree(folder_name + 'output')
+                os.remove(folder_name + file_name_mp3)
+                return file_name
         except Exception as e:
             messagebox.showerror('Error', f"Error: {e}")
 
