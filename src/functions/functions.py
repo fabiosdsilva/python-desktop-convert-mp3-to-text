@@ -16,11 +16,9 @@ class AudioConverter:
 
             if isinstance(select_file, (str)):
                 file_name = select_file.split('/')[-1]
-
                 _, file_extension = os.path.splitext(select_file)
-                print('Extensao do arquivo', file_extension)
 
-                if file_extension != '.mp3':
+                if file_extension != '.mp3' and file_extension != '.mp4':
                     return messagebox.showwarning('Atenção', 'O arquivo selecionado não é de áudio.\nApenas arquivos no formato mp3 ou mp4 são válidos.')
 
                 file_name_mp3 = file_name.replace('.mp4', '.mp3')

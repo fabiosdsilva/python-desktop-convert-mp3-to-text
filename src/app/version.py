@@ -4,7 +4,7 @@ version = '''
 {
     "release": 1,
     "feature": 2,
-    "fix": 2
+    "fix": 3
 }
 '''
 
